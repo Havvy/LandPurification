@@ -1,0 +1,16 @@
+[
+{
+  "modid": "landpurification",
+  "name": "Land Purification",
+  "description": "Purify your world from monsters",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Havvy"],
+  "credits": "The Natura developers for event examples.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
