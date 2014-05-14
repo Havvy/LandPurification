@@ -22,18 +22,12 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.havvy.minecraft.landpurification.LandPurification;
 
 public class SpawnHandler {
-	private static int InitialMobCount = 32; // TODO: Configuration value.
-	private static List<Integer> dimensionBlacklist = new ArrayList<Integer>();
+	public static int initialPurity;
+	public static int[] dimensionBlacklist;
 	private Map<DimChunk, Integer> mobCounts = new HashMap<DimChunk, Integer>();
 	private Side side = FMLCommonHandler.instance().getEffectiveSide();
 	
-	public SpawnHandler () {
-		if (dimensionBlacklist.size() == 0)
-		{
-			dimensionBlacklist.add(new Integer(-1)); // Nether
-			dimensionBlacklist.add(new Integer(1));  // End
-		}
-		
+	public SpawnHandler () {		
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 	}
 	
@@ -50,7 +44,8 @@ public class SpawnHandler {
 		
 		// Ignore the end and the nether.
 		int dimensionId = entity.worldObj.provider.dimensionId;
-		if (dimensionBlacklist.contains(dimensionId)) return;
+		
+		if (dimensionIsBlacklisted(dimensionId)) return;
 		
 		int chunkX = (int) entity.posX >> 4;
 		int chunkZ = (int) entity.posZ >> 4;
@@ -109,7 +104,7 @@ public class SpawnHandler {
 	@SubscribeEvent
     public void onChunkLoad(ChunkDataEvent.Load event) {
 		int dimensionId = event.world.provider.dimensionId;
-        if (dimensionBlacklist.contains(dimensionId)) return;
+		if (dimensionIsBlacklisted(dimensionId)) return;
         Chunk chunk = event.getChunk();
         DimChunk dimChunk = new DimChunk(dimensionId, chunk.xPosition, chunk.zPosition);
         
@@ -128,7 +123,7 @@ public class SpawnHandler {
     public void onChunkSave(ChunkDataEvent.Save event)
     {
 		int dimensionId = event.world.provider.dimensionId;
-        if (dimensionBlacklist.contains(dimensionId)) return;
+		if (dimensionIsBlacklisted(dimensionId)) return;
         Chunk chunk = event.getChunk();
         DimChunk dimChunk = new DimChunk(dimensionId, chunk.xPosition, chunk.zPosition);
         
@@ -140,7 +135,7 @@ public class SpawnHandler {
         }
         else
         {
-        	tag.setInteger("mobCount", InitialMobCount);
+        	tag.setInteger("mobCount", initialPurity);
         }
         
         event.getData().setTag("LandPurification", tag);
@@ -149,7 +144,7 @@ public class SpawnHandler {
 	private void setInitialMobCount (DimChunk dimChunk)
 	{
 		log("New Chunk: " + dimChunk);
-		mobCounts.put(dimChunk, InitialMobCount);
+		mobCounts.put(dimChunk, initialPurity);
 	}
 	
 	private void setMobCount (DimChunk dimChunk, NBTTagCompound tag)
@@ -176,8 +171,18 @@ public class SpawnHandler {
 		}
 		else
 		{
+			log("ERROR!");
 			// FIXME: ???
 		}
+	}
+	
+	private boolean dimensionIsBlacklisted (int dimensionId) {
+		for (int ix = 0; ix < dimensionBlacklist.length; ix++)
+		{
+			if (dimensionBlacklist[ix] == dimensionId) return true;
+		}
+		
+		return false;
 	}
 	
 	private void log (String string)
