@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.relauncher.Side;
+
 
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -21,7 +26,7 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 
 import net.havvy.minecraft.landpurification.LandPurification;
 
-public class SpawnHandler {
+public class SpawnHandler implements IWorldGenerator {
 	public static int initialPurity;
 	public static int[] dimensionBlacklist;
 	private Map<DimChunk, Integer> mobCounts = new HashMap<DimChunk, Integer>();
@@ -139,6 +144,15 @@ public class SpawnHandler {
         }
         
         event.getData().setTag("LandPurification", tag);
+    }
+    
+    @Override
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
+    {
+		int dimensionId = world.provider.dimensionId;
+		if (dimensionIsBlacklisted(dimensionId)) return;
+    	DimChunk dimChunk = new DimChunk(dimensionId, chunkX, chunkZ);
+    	setInitialMobCount(dimChunk);
     }
     
 	private void setInitialMobCount (DimChunk dimChunk)

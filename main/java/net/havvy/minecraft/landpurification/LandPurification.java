@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.havvy.minecraft.landpurification.handlers.SpawnHandler;
 
@@ -33,6 +34,8 @@ public class LandPurification
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	MinecraftForge.EVENT_BUS.register(new SpawnHandler());
+    	SpawnHandler spawnHandler = new SpawnHandler();
+    	MinecraftForge.EVENT_BUS.register(spawnHandler);
+    	GameRegistry.registerWorldGenerator(spawnHandler, Integer.MAX_VALUE);
     }
 }
