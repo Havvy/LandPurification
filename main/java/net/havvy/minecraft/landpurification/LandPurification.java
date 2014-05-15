@@ -1,6 +1,6 @@
 package net.havvy.minecraft.landpurification;
 
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -40,6 +40,6 @@ public class LandPurification
     {
         SpawnHandler spawnHandler = new SpawnHandler();
         MinecraftForge.EVENT_BUS.register(spawnHandler);
-        GameRegistry.registerWorldGenerator(spawnHandler, Integer.MAX_VALUE);
+        GameRegistry.registerWorldGenerator(spawnHandler);
     }
 }

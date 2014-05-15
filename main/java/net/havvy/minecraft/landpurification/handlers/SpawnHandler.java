@@ -14,12 +14,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.relauncher.Side;
 
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
@@ -38,7 +38,7 @@ public class SpawnHandler implements IWorldGenerator
         Side side = FMLCommonHandler.instance().getEffectiveSide();
     }
 
-    @SubscribeEvent
+    @ForgeSubscribe
     public void onLivingSpawn (CheckSpawn event)
     {
         Result result = event.getResult();
@@ -89,7 +89,7 @@ public class SpawnHandler implements IWorldGenerator
         entityTag.setTag("spawn", spawnTag);
     }
 
-    @SubscribeEvent
+    @ForgeSubscribe
     public void onLivingDeath (LivingDeathEvent event)
     {
         // Ignore non-monsters.
@@ -116,7 +116,7 @@ public class SpawnHandler implements IWorldGenerator
     /*
      * When the chunk loads, add mobCount to it if not already there.
      */
-    @SubscribeEvent
+    @ForgeSubscribe
     public void onChunkLoad (ChunkDataEvent.Load event)
     {
         int dimensionId = event.world.provider.dimensionId;
@@ -137,7 +137,7 @@ public class SpawnHandler implements IWorldGenerator
         }
     }
 
-    @SubscribeEvent
+    @ForgeSubscribe
     public void onChunkSave (ChunkDataEvent.Save event)
     {
         int dimensionId = event.world.provider.dimensionId;
